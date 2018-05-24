@@ -1,15 +1,17 @@
 package controllers
 
+
 import javax.inject._
 
 import play.api.mvc._
+import play.api.Configuration
 
 /**
  * This controller creates an `Action` to handle HTTP requests to the
  * application's home page.
  */
 @Singleton
-class HomeController @Inject()(cc: ControllerComponents) (implicit assetsFinder: AssetsFinder)
+class ConfigController @Inject()(cc: ControllerComponents, config: Configuration) (implicit assetsFinder: AssetsFinder)
   extends AbstractController(cc) {
 
   /**
@@ -18,8 +20,8 @@ class HomeController @Inject()(cc: ControllerComponents) (implicit assetsFinder:
    * will be called when the application receives a `GET` request with
    * a path of `/`.
    */
-  def index = Action {
-    Ok(views.html.index("Welcome you to Play 2 & Scala demo page."));
+  def democonfig = Action {
+    Ok(config.get[String]("netc.demo.testkey1"));
   }
 
 }

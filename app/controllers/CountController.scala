@@ -4,7 +4,7 @@ import javax.inject._
 
 import play.api.mvc._
 import services.Counter
-
+import services.AtomicCounter
 /**
  * This controller demonstrates how to use dependency injection to
  * bind a component into a controller class. The class creates an
@@ -12,9 +12,8 @@ import services.Counter
  * object is injected by the Guice dependency injection system.
  */
 @Singleton
-class CountController @Inject() (cc: ControllerComponents,
-                                 counter: Counter) extends AbstractController(cc) {
-
+class CountController @Inject() (cc: ControllerComponents, counter: AtomicCounter) extends AbstractController(cc) {
+  //var counter = new AtomicCounter();
   /**
    * Create an action that responds with the [[Counter]]'s current
    * count. The result is plain text. This `Action` is mapped to

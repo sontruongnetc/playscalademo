@@ -4,9 +4,13 @@ import javax.inject._
 
 import akka.actor.ActorSystem
 import play.api.mvc._
+import play.api.libs.json._
+import play.api.libs.functional.syntax._
 
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future, Promise}
+
+import models.Message
 
 /**
  * This controller creates an `Action` that demonstrates how to write
@@ -35,15 +39,21 @@ class AsyncController @Inject()(cc: ControllerComponents, actorSystem: ActorSyst
    * a path of `/message`.
    */
   def message = Action.async {
-    getFutureMessage(1.second).map { msg => Ok(msg) }
+    getFutureMessage(1.second).map { msg => {
+            Ok(msg.text)
+        }
+    }
   }
 
-  private def getFutureMessage(delayTime: FiniteDuration): Future[String] = {
-    val promise: Promise[String] = Promise[String]()
+  private def getFutureMessage(delayTime: FiniteDuration): Future[Message] = {
+    val promise: Promise[Message] = Promise[Message]()
+    val msg: Message = new Message()
+    msg.text = "Hi!"
+    msg.status_(10)
     actorSystem.scheduler.scheduleOnce(delayTime) {
-      promise.success("Hi!")
+      promise.success(msg)
     }(actorSystem.dispatcher) // run scheduled tasks using the actor system's dispatcher
-    promise.future
+      promise.future
   }
 
 }
